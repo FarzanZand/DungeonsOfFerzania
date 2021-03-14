@@ -23,7 +23,7 @@ public class GameEvents : MonoBehaviour
     {
         if(onActionTaken != null)
         {
-            onActionTaken(); 
+            onActionTaken();
         }
     }
 }
