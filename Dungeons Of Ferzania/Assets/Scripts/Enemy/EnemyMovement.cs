@@ -5,13 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class EnemyMovement : MonoBehaviour
 {
-    private EnemyManager enemyManager;
+    [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap collisionTilemap;
 
     private float moveX;
     private float moveY;
 
+    private int relativeLocation;
+    
     private Vector3 direction; 
 
     private void Start() 
@@ -32,12 +34,70 @@ public class EnemyMovement : MonoBehaviour
     {
         direction = RelativeLocationToPlayer();
 
-        if(CanMove(direction))
-        transform.position += direction; 
+        // Move closest path to player. If blocked, randomly try another direction
+        if(CanMoveToLocation(direction))
+        {
+        transform.position += direction;
+        }
 
+        // If blocked, try randomly to go another direction
+        else if(Mathf.Abs(enemyManager.DistanceFromPlayerX) > Mathf.Abs(enemyManager.DistanceFromPlayerY))
+        {
+            int rand = Random.Range(1, 3);
+            
+            if(rand == 1)
+            {
+                direction = new Vector3(0f, 1f, 0f);
+                if(CanMoveToLocation(direction))
+                    transform.position += direction;
+            }
+            else
+            {
+                direction = new Vector3(0f, -1f, 0f);
+                if (CanMoveToLocation(direction))
+                transform.position += direction;
+            }
+        }
+        else if (Mathf.Abs(enemyManager.DistanceFromPlayerX) < Mathf.Abs(enemyManager.DistanceFromPlayerY))
+        {
+            int rand = Random.Range(1, 3);
 
-        Debug.Log("MovingTowardsPlayer X" + moveX + "Y " + moveY );    
+            if (rand == 1)
+            {
+                direction = new Vector3(1f, 0f, 0f);
+                if (CanMoveToLocation(direction))
+                transform.position += direction;
+            }
+            else
+            {
+                direction = new Vector3(-1f, 0f, 0f);
+                if (CanMoveToLocation(direction))
+                transform.position += direction;
+            }
+        }
     }
+
+    private void MoveUp()
+    {
+        transform.position += new Vector3(0f, 1f, 0f);
+    }
+
+    private void MoveDown()
+    {
+        transform.position += new Vector3(0f, -1f, 0f);
+    }
+
+    private void MoveLeft()
+    {
+        transform.position += new Vector3(-1f, 0f, 0f);
+    }
+
+    private void MoveRight()
+    {
+        transform.position += new Vector3(1f, 0f, 0f);
+    }
+
+
 
     private Vector3 RelativeLocationToPlayer()
     {
@@ -82,15 +142,17 @@ public class EnemyMovement : MonoBehaviour
             moveX = 0;
             moveY = 0; 
         }
-f
+
         return new Vector3(moveX, moveY, 0);
     }
 
-    private bool CanMove(Vector2 direction)
+    private bool CanMoveToLocation(Vector2 direction)
     {
     Vector3Int gridPosition = groundTilemap.WorldToCell(transform.position + (Vector3)direction);
         if (!groundTilemap.HasTile(gridPosition) || collisionTilemap.HasTile(gridPosition))
+        {
             return false;
+        }
         return true;
 
     }
