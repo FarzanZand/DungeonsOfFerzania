@@ -46,11 +46,11 @@ public class PlayerMovement : Player
 
     private void MoveAction(Vector2 direction)
     {
-        if (CanMove(direction) && !actionOnCooldown)
+        if (CanMove(direction) && !playerAction.actionOnCooldown)
         {
             destination = transform.position + (Vector3)direction;
             movePlayer = true; 
-            ActionTaken(playerManager.moveActionCooldown);
+            playerAction.ActionTaken(playerAction.moveActionCooldown);
         }
     }
 

@@ -4,6 +4,4 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    public float moveActionCooldown;
-    public float attackActionCooldown; 
 }
