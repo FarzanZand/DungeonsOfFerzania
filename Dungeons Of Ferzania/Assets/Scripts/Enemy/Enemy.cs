@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour 
+public class Enemy : MonoBehaviour
 {
     [SerializeField] protected GameObject player;
     [SerializeField] protected float moveActionDelay;
+    [SerializeField] EnemyManager enemyManager;
     protected EnemyMovement enemyMovement;
 
     virtual protected void Start()
     {
+        enemyManager = GameObject.Find("EnemyManager").GetComponent<EnemyManager>();
         enemyMovement = GetComponent<EnemyMovement>();
         GameEvents.current.onActionTaken += DoAction;
         player = GameObject.Find("Player");
@@ -25,9 +27,21 @@ public class Enemy : MonoBehaviour
         return player.transform.position.y - this.transform.position.y;
     }
 
+    protected bool PlayerIsAdjacent()
+    {
+        if (Mathf.Abs(GetDistanceFromPlayerX()) == 1 && Mathf.Abs(GetDistanceFromPlayerY()) == 0 || (Mathf.Abs(GetDistanceFromPlayerX()) == 0 && Mathf.Abs(GetDistanceFromPlayerY()) == 1))
+        {
+        return true;
+        }
+        else
+        {
+        return false;
+        }
+    }
+
     public void DoAction()
     {
-        StartCoroutine(DelayedAction(moveActionDelay));
+        StartCoroutine(DelayedAction(enemyManager.moveActionDelay));
     }
 
     private IEnumerator DelayedAction(float waitTime)
@@ -40,10 +54,8 @@ public class Enemy : MonoBehaviour
             {
                 enemyMovement.Move();
             }
-
-            // Attack when in melee range
-            if (Mathf.Abs(GetDistanceFromPlayerX()) == Mathf.Abs(GetDistanceFromPlayerY())) // Do not attack diagonally
-                Debug.Log("Attack");
+            else if(PlayerIsAdjacent()) // Do not attack diagonally, and player is in melee range
+            Debug.Log("Attack");
         }
     }
 }

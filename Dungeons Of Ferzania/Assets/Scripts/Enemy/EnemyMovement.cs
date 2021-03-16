@@ -15,11 +15,16 @@ public class EnemyMovement : Enemy
         collisionTilemap = GameObject.Find("Collider").GetComponent<Tilemap>();
     }
 
-    private void Update() {
-        Debug.Log("X " + GetDistanceFromPlayerX() + "Y " + GetDistanceFromPlayerY());
+    public void Move()
+    {
+        // Move when player is within range
+        if(Mathf.Abs(GetDistanceFromPlayerX()) < 8 && Mathf.Abs(GetDistanceFromPlayerY()) < 8)
+        {
+        MoveTowardsPlayer(); 
+        }
     }
 
-    public void Move()
+    public void MoveTowardsPlayer()
     {
         // If distance between X and Y is equal
         if (Mathf.Abs(GetDistanceFromPlayerX()) == Mathf.Abs(GetDistanceFromPlayerY()) && Mathf.Abs(GetDistanceFromPlayerX()) >= 2f)
