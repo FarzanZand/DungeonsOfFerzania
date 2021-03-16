@@ -18,7 +18,6 @@ public class PlayerAction : MonoBehaviour
         actionOnCooldown = true;
         StartCoroutine(ActionCooldown(actionCooldown));
         GameEvents.current.ActionTaken(); // Run all methods subscribing to onActionTaken; 
-
     }
 
     public IEnumerator ActionCooldown(float actionCooldownTime)
