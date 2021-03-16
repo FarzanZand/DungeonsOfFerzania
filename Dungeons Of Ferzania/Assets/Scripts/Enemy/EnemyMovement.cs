@@ -3,157 +3,196 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : Enemy
 {
-    [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private Tilemap groundTilemap;
     [SerializeField] private Tilemap collisionTilemap;
 
-    private float moveX;
-    private float moveY;
-
-    private int relativeLocation;
-    
-    private Vector3 direction; 
-
-    private void Start() 
+    protected override void Start()
     {
+        base.Start();
         groundTilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
         collisionTilemap = GameObject.Find("Collider").GetComponent<Tilemap>();
-        moveX = 0;
-        moveY = 0;
-        enemyManager = GetComponent<EnemyManager>();
+    }
+
+    private void Update() {
+        Debug.Log("X " + GetDistanceFromPlayerX() + "Y " + GetDistanceFromPlayerY());
     }
 
     public void Move()
     {
-        MoveTowardsPlayer();
-    }
-
-    public void MoveTowardsPlayer()
-    {
-        direction = RelativeLocationToPlayer();
-
-        // Move closest path to player. If blocked, randomly try another direction
-        if(CanMoveToLocation(direction))
+        // If distance between X and Y is equal
+        if (Mathf.Abs(GetDistanceFromPlayerX()) == Mathf.Abs(GetDistanceFromPlayerY()) && Mathf.Abs(GetDistanceFromPlayerX()) >= 2f)
         {
-        transform.position += direction;
+            //MoveIfXSameAsY();
         }
 
-        // If blocked, try randomly to go another direction
-        else if(Mathf.Abs(enemyManager.DistanceFromPlayerX) > Mathf.Abs(enemyManager.DistanceFromPlayerY))
-        {
-            int rand = Random.Range(1, 3);
-            
-            if(rand == 1)
-            {
-                direction = new Vector3(0f, 1f, 0f);
-                if(CanMoveToLocation(direction))
-                    transform.position += direction;
-            }
-            else
-            {
-                direction = new Vector3(0f, -1f, 0f);
-                if (CanMoveToLocation(direction))
-                transform.position += direction;
-            }
-        }
-        else if (Mathf.Abs(enemyManager.DistanceFromPlayerX) < Mathf.Abs(enemyManager.DistanceFromPlayerY))
-        {
-            int rand = Random.Range(1, 3);
-
-            if (rand == 1)
-            {
-                direction = new Vector3(1f, 0f, 0f);
-                if (CanMoveToLocation(direction))
-                transform.position += direction;
-            }
-            else
-            {
-                direction = new Vector3(-1f, 0f, 0f);
-                if (CanMoveToLocation(direction))
-                transform.position += direction;
-            }
-        }
-    }
-
-    private void MoveUp()
-    {
-        transform.position += new Vector3(0f, 1f, 0f);
-    }
-
-    private void MoveDown()
-    {
-        transform.position += new Vector3(0f, -1f, 0f);
-    }
-
-    private void MoveLeft()
-    {
-        transform.position += new Vector3(-1f, 0f, 0f);
-    }
-
-    private void MoveRight()
-    {
-        transform.position += new Vector3(1f, 0f, 0f);
-    }
-
-
-
-    private Vector3 RelativeLocationToPlayer()
-    {
-        moveX = 0; 
-        moveY = 0;
-
+        // Try moving, if false, move other direction.
         // if the distance to the player in the x-axis is greater than in the y-axis, move enemy in the x-axis
-        if (Mathf.Abs(enemyManager.DistanceFromPlayerX) > Mathf.Abs(enemyManager.DistanceFromPlayerY))
+        if (Mathf.Abs(GetDistanceFromPlayerX()) > Mathf.Abs(GetDistanceFromPlayerY()))
         {
             // if the player is to the right of the enemy, move enemy to the right
-            if (enemyManager.DistanceFromPlayerX > 0)
+            if (GetDistanceFromPlayerX() > 0)
             {
-                moveX = 1;
+                if (!MoveRight())
+                    MoveClosestYDirection();
             }
 
             // if the player is to the left of the enemy move to the left
-            if (enemyManager.DistanceFromPlayerX < 0)
+            if (GetDistanceFromPlayerX() < 0)
             {
-                moveX = -1;
+                if (!MoveLeft())
+                    MoveClosestYDirection();
             }
         }
 
         // if the distance to the player in the x-axis is lesser than in the y-axis, move enemy in the y-axis
-        if (Mathf.Abs(enemyManager.DistanceFromPlayerX) < Mathf.Abs(enemyManager.DistanceFromPlayerY))
+        if (Mathf.Abs(GetDistanceFromPlayerX()) < Mathf.Abs(GetDistanceFromPlayerY()))
         {
             // if the player is above the enemy, move enemy up
-            if (enemyManager.DistanceFromPlayerY > 0)
+            if (GetDistanceFromPlayerY() > 0)
             {
-                moveY = 1;
+                if (!MoveUp())
+                    MoveClosestXDirection();
             }
 
             // if the player is below the enemy move to the enemy down
-            if (enemyManager.DistanceFromPlayerY < 0)
+            if (GetDistanceFromPlayerY() < 0)
             {
-                moveY = -1;
+                if (!MoveDown())
+                    MoveClosestXDirection();
             }
         }
-
-        // If the X and Y distance is equal, select a random direction
-        if (Mathf.Abs(enemyManager.DistanceFromPlayerX) == Mathf.Abs(enemyManager.DistanceFromPlayerY))
-        {
-            moveX = 0;
-            moveY = 0; 
-        }
-
-        return new Vector3(moveX, moveY, 0);
     }
 
-    private bool CanMoveToLocation(Vector2 direction)
+    //Checks if location to move to is valid and not blocked
+    private bool CanMoveToLocation(Vector3 direction)
     {
-    Vector3Int gridPosition = groundTilemap.WorldToCell(transform.position + (Vector3)direction);
+        Vector3Int gridPosition = groundTilemap.WorldToCell((Vector3)direction);
         if (!groundTilemap.HasTile(gridPosition) || collisionTilemap.HasTile(gridPosition))
         {
             return false;
         }
         return true;
-
     }
-}
+
+    private bool MoveUp()
+    {
+        Vector3 direction = (transform.position + new Vector3(0f, 1f, 0f));
+        if (CanMoveToLocation(direction))
+        {
+            transform.position = direction;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    private bool MoveDown()
+    {
+        Vector3 direction = (transform.position + new Vector3(0f, -1f, 0f));
+        if (CanMoveToLocation(direction))
+        {
+            transform.position = direction;
+            return true;
+        }
+        return false;
+    }
+
+    private bool MoveLeft()
+    {
+        Vector3 direction = transform.position + new Vector3(-1f, 0f, 0f);
+        if (CanMoveToLocation(direction))
+        {
+            transform.position = direction;
+            return true;
+        }
+        return false;
+    }
+
+    private bool MoveRight()
+    {
+        Vector3 direction = (transform.position + new Vector3(1f, 0f, 0f));
+        if (CanMoveToLocation(direction))
+        {
+            transform.position = direction;
+            return true;
+        }
+        return false;
+    }
+
+    private void MoveClosestYDirection()
+    {
+        if (GetDistanceFromPlayerY() > 0)
+            MoveUp();
+        else
+            MoveDown();
+    }
+
+    private void MoveClosestXDirection()
+    {
+        if (GetDistanceFromPlayerX() < 0)
+            MoveLeft();
+        else
+            MoveRight();
+    }
+
+    // TODO
+    // private void MoveIfXSameAsY()
+    // {
+    //     int rand = Random.Range(1, 3);
+
+    //     // WHY DO YOU PROC?!
+    //     if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() < 0)
+    //     {
+    //         Debug.Log("1");
+    //         if (rand == 1)
+    //         {
+    //             MoveLeft();
+
+    //         }
+    //         else if (rand == 2)
+    //         {
+    //             MoveDown();
+    //         }
+    //     }
+
+    //     else if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() > 0)
+    //     {
+    //         Debug.Log("2");
+    //         if (rand == 1)
+    //         {
+    //             MoveLeft();
+    //         }
+    //         else if (rand == 2)
+    //         {
+    //             MoveUp();
+    //         }
+    //     }
+
+    //     else if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() > 0)
+    //     {
+    //         Debug.Log("3");
+    //         if (rand == 1)
+    //         {
+    //             MoveUp();
+    //         }
+    //         else if (rand == 2)
+    //         {
+    //             MoveRight();
+    //         }
+    //     }
+
+    //     else if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() < 0)
+    //     {
+    //         Debug.Log("4");
+    //         if (rand == 1)
+    //         {
+    //             MoveDown();
+    //         }
+    //         else if (rand == 2)
+    //         {
+    //             MoveRight();
+    //         }
+    //     }
+    }

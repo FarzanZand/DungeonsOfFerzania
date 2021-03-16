@@ -51,8 +51,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3Int gridDestination = groundTilemap.WorldToCell(transform.position + (Vector3)direction);
         // Check if the the destination has an 
         Collider2D enemyBlocksPath = Physics2D.OverlapCircle(transform.position + (Vector3)direction, 0.1f, enemyLayer); // Layermask 3 is grid layer
-        Debug.Log(enemyBlocksPath);
-
 
         if (!groundTilemap.HasTile(gridDestination) || collisionTilemap.HasTile(gridDestination) || enemyBlocksPath != null )
             return false;
