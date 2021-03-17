@@ -6,35 +6,41 @@ using UnityEngine.Tilemaps;
 public class EnemyMovement : Enemy
 {
     [SerializeField] private Tilemap groundTilemap;
-    [SerializeField] private Tilemap collisionTilemap;
+    [SerializeField] private Tilemap wallsTilemap;
+    [SerializeField] private Tilemap roofTilemap;
+    [SerializeField] private Tilemap blockingObjects;
+
 
     protected override void Start()
     {
         base.Start();
         groundTilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
-        collisionTilemap = GameObject.Find("Collider").GetComponent<Tilemap>();
+        wallsTilemap = GameObject.Find("Walls").GetComponent<Tilemap>();
+        roofTilemap = GameObject.Find("Roof").GetComponent<Tilemap>();
+        blockingObjects = GameObject.Find("BlockingObjects").GetComponent<Tilemap>();
+
     }
 
     public void Move()
     {
         // Move when player is within range
-        if(Mathf.Abs(GetDistanceFromPlayerX()) < 8 && Mathf.Abs(GetDistanceFromPlayerY()) < 8)
+        if (Mathf.Abs(GetDistanceFromPlayerX()) < 12 && Mathf.Abs(GetDistanceFromPlayerY()) < 12)
         {
-        MoveTowardsPlayer(); 
+            MoveTowardsPlayer();
         }
     }
 
     public void MoveTowardsPlayer()
     {
         // If distance between X and Y is equal
-        if (Mathf.Abs(GetDistanceFromPlayerX()) == Mathf.Abs(GetDistanceFromPlayerY()) && Mathf.Abs(GetDistanceFromPlayerX()) >= 2f)
+        if (Mathf.Abs(GetDistanceFromPlayerX()) == Mathf.Abs(GetDistanceFromPlayerY()) && Mathf.Abs(GetDistanceFromPlayerX()) >= 1f)
         {
-            //MoveIfXSameAsY();
+            MoveIfXSameAsY();
         }
 
         // Try moving, if false, move other direction.
         // if the distance to the player in the x-axis is greater than in the y-axis, move enemy in the x-axis
-        if (Mathf.Abs(GetDistanceFromPlayerX()) > Mathf.Abs(GetDistanceFromPlayerY()))
+        else if (Mathf.Abs(GetDistanceFromPlayerX()) > Mathf.Abs(GetDistanceFromPlayerY()))
         {
             // if the player is to the right of the enemy, move enemy to the right
             if (GetDistanceFromPlayerX() > 0)
@@ -52,7 +58,7 @@ public class EnemyMovement : Enemy
         }
 
         // if the distance to the player in the x-axis is lesser than in the y-axis, move enemy in the y-axis
-        if (Mathf.Abs(GetDistanceFromPlayerX()) < Mathf.Abs(GetDistanceFromPlayerY()))
+        else if (Mathf.Abs(GetDistanceFromPlayerX()) < Mathf.Abs(GetDistanceFromPlayerY()))
         {
             // if the player is above the enemy, move enemy up
             if (GetDistanceFromPlayerY() > 0)
@@ -74,7 +80,7 @@ public class EnemyMovement : Enemy
     private bool CanMoveToLocation(Vector3 direction)
     {
         Vector3Int gridPosition = groundTilemap.WorldToCell((Vector3)direction);
-        if (!groundTilemap.HasTile(gridPosition) || collisionTilemap.HasTile(gridPosition))
+        if (!groundTilemap.HasTile(gridPosition) || wallsTilemap.HasTile(gridPosition) || roofTilemap.HasTile(gridPosition) || blockingObjects.HasTile(gridPosition))
         {
             return false;
         }
@@ -143,61 +149,58 @@ public class EnemyMovement : Enemy
     }
 
     // TODO
-    // private void MoveIfXSameAsY()
-    // {
-    //     int rand = Random.Range(1, 3);
+    private void MoveIfXSameAsY()
+    {
+        int rand = Random.Range(1, 3);
 
-    //     // WHY DO YOU PROC?!
-    //     if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() < 0)
-    //     {
-    //         Debug.Log("1");
-    //         if (rand == 1)
-    //         {
-    //             MoveLeft();
+        if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() < 0)
+        {
+            if (rand == 1)
+            {
+                MoveLeft();
 
-    //         }
-    //         else if (rand == 2)
-    //         {
-    //             MoveDown();
-    //         }
-    //     }
+            }
+            else if (rand == 2)
+            {
+                MoveDown();
+            }
+        }
 
-    //     else if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() > 0)
-    //     {
-    //         Debug.Log("2");
-    //         if (rand == 1)
-    //         {
-    //             MoveLeft();
-    //         }
-    //         else if (rand == 2)
-    //         {
-    //             MoveUp();
-    //         }
-    //     }
+        else if (GetDistanceFromPlayerX() < 0 && GetDistanceFromPlayerY() > 0)
+        {
+            if (rand == 1)
+            {
+                MoveLeft();
+            }
+            else if (rand == 2)
+            {
+                MoveUp();
+            }
+        }
 
-    //     else if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() > 0)
-    //     {
-    //         Debug.Log("3");
-    //         if (rand == 1)
-    //         {
-    //             MoveUp();
-    //         }
-    //         else if (rand == 2)
-    //         {
-    //             MoveRight();
-    //         }
-    //     }
+        if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() > 0)
+        {
+            if (rand == 1)
+            {
+                MoveUp();
+            }
+            else if (rand == 2)
+            {
+                MoveRight();
+            }
+        }
 
-    //     else if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() < 0)
-    //     {
-    //         Debug.Log("4");
-    //         if (rand == 1)
-    //         {
-    //             MoveDown();
-    //         }
-    //         else if (rand == 2)
-    //         {
-    //             MoveRight();
-    //         }
-    //     }
+        else if (GetDistanceFromPlayerX() > 0 && GetDistanceFromPlayerY() < 0)
+        {
+            if (rand == 1)
+            {
+                MoveDown();
+            }
+            else if (rand == 2)
+            {
+                MoveRight();
+            }
+        }
     }
+
+}

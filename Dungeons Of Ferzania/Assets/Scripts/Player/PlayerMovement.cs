@@ -11,8 +11,12 @@ public class PlayerMovement : Player
 
     [SerializeField] private float moveSpeed; 
     [SerializeField] private Tilemap groundTilemap;
-    [SerializeField] private Tilemap collisionTilemap;
-    public LayerMask enemyLayer; 
+    [SerializeField] private Tilemap wallsTilemap;
+    [SerializeField] private Tilemap roofTilemap;
+    [SerializeField] private Tilemap blockingObjectsTilemap;
+
+    public LayerMask enemyLayer;
+    public LayerMask blockingObjectLayer; 
 
     private void Awake()
     {
@@ -59,9 +63,10 @@ public class PlayerMovement : Player
         // Check if the destination grid has a collider
         Vector3Int gridDestination = groundTilemap.WorldToCell(transform.position + (Vector3)direction);
         // Check if the the destination has an 
-        Collider2D enemyBlocksPath = Physics2D.OverlapCircle(transform.position + (Vector3)direction, 0.1f, enemyLayer); 
+        Collider2D enemyBlocksPath = Physics2D.OverlapCircle(transform.position + (Vector3)direction, 0.1f, enemyLayer);
+        Collider2D objectBlocksPath = Physics2D.OverlapCircle(transform.position + (Vector3)direction, 0.1f, blockingObjectLayer);
 
-        if (!groundTilemap.HasTile(gridDestination) || collisionTilemap.HasTile(gridDestination) || enemyBlocksPath != null )
+        if (!groundTilemap.HasTile(gridDestination) || wallsTilemap.HasTile(gridDestination) || enemyBlocksPath != null || roofTilemap.HasTile(gridDestination) || blockingObjectsTilemap.HasTile(gridDestination) || objectBlocksPath != null)
             return false;
         return true;
     }

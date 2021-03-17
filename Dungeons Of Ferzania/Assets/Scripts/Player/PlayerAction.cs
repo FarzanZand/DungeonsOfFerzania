@@ -13,6 +13,12 @@ public class PlayerAction : MonoBehaviour
         actionOnCooldown = false;
     }
 
+    private void Update() {
+        // Force action with Space for Debug purposes
+     if(Input.GetKeyDown(KeyCode.Space))
+            GameEvents.current.ActionTaken();
+    }
+
     public void ActionTaken(float actionCooldown)
     {
         actionOnCooldown = true;
