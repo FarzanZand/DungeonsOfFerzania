@@ -9,26 +9,38 @@ public class PlayerMovement : Player
     private Vector3 destination;
     private bool movePlayer;
 
-    [SerializeField] private float moveSpeed; 
-    [SerializeField] private Tilemap groundTilemap;
-    [SerializeField] private Tilemap wallsTilemap;
-    [SerializeField] private Tilemap roofTilemap;
-    [SerializeField] private Tilemap blockingObjectsTilemap;
+    [SerializeField] private float moveSpeed;
+    private Tilemap groundTilemap;
+    private Tilemap wallsTilemap;
+    private Tilemap roofTilemap;
+    private Tilemap blockingObjectsTilemap;
 
     public LayerMask enemyLayer;
-    public LayerMask blockingObjectLayer; 
+    public LayerMask blockingObjectLayer;
 
+    protected override void Start()
+    {
+        base.Start();
+        // Every time a WASD movement is performed, read raw value from input and run Move
+        controls.Main.Movement.performed += ctx => MoveAction(ctx.ReadValue<Vector2>());
+
+        groundTilemap = GameObject.Find("Ground").GetComponent<Tilemap>();
+        wallsTilemap = GameObject.Find("Walls").GetComponent<Tilemap>();
+        roofTilemap = GameObject.Find("Roof").GetComponent<Tilemap>();
+        blockingObjectsTilemap = GameObject.Find("BlockingObjects").GetComponent<Tilemap>();
+    }
     private void Awake()
     {
-        movePlayer = false; 
+        movePlayer = false;
         controls = new PlayerInput();
     }
 
-    private void Update() {
-        if(movePlayer)
-        transform.position = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+    private void Update()
+    {
+        if (movePlayer)
+            transform.position = Vector2.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
         if (transform.position == destination)
-            movePlayer = false; 
+            movePlayer = false;
     }
 
     private void OnEnable()
@@ -41,19 +53,13 @@ public class PlayerMovement : Player
         controls.Disable();
     }
 
-    protected override void Start()
-    {
-        base.Start();
-        // Every time a WASD movement is performed, read raw value from input and run Move
-        controls.Main.Movement.performed += ctx => MoveAction(ctx.ReadValue<Vector2>());
-    }
 
     private void MoveAction(Vector2 direction)
     {
         if (CanMove(direction) && !playerAction.actionOnCooldown)
         {
             destination = transform.position + (Vector3)direction;
-            movePlayer = true; 
+            movePlayer = true;
             playerAction.ActionTaken(playerAction.moveActionCooldown);
         }
     }
