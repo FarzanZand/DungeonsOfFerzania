@@ -15,8 +15,9 @@ public class PlayerAction : MonoBehaviour
 
     private void Update() {
         // Force action with Space for Debug purposes
-     if(Input.GetKeyDown(KeyCode.Space))
+     if(Input.GetKeyDown(KeyCode.Space)){
             GameEvents.current.ActionTaken();
+        }
     }
 
     public void ActionTaken(float actionCooldown)

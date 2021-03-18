@@ -9,18 +9,22 @@ using UnityEngine;
 
 public class GameEvents : MonoBehaviour
 {
+    // Stop all non-player-actions if haltActions is true; 
+    public bool haltActions;
+
     public static GameEvents current;
 
     private void Awake()
     {
-        current = this; 
+        haltActions = false; 
+        current = this;
     }
 
     public event Action onActionTaken; 
 
     public void ActionTaken() 
     {
-        if(onActionTaken != null)
+        if(onActionTaken != null && haltActions == false)
         {
             onActionTaken();
         }
