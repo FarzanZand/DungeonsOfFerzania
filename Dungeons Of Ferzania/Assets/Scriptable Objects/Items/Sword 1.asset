@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc904fed886588c41809592027e98011, type: 3}
   m_Name: Sword 1
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 7511931391759606377, guid: 81ba8fa14e35a1044908d28347b9fe7b, type: 3}
   type: 1
   description: 'A sword for slashy slashy stab stab. '
-  atkBonus: 10
+  atkBonus: 15
   defenseBonus: 0
