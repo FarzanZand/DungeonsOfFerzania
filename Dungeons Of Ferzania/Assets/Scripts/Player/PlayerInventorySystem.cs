@@ -32,7 +32,7 @@ public class PlayerInventorySystem : MonoBehaviour
     }
 
     private void OnApplicationQuit() {
-     //   inventory.Container.Clear(); 
+    inventory.Container.Items.Clear(); 
     }
 }
   

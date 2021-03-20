@@ -10,22 +10,19 @@ using UnityEngine;
 public class ItemDatabaseObject : ScriptableObject, ISerializationCallbackReceiver
 {
     public ItemObject[] Items; // Array of all items in the game
-    public Dictionary<ItemObject, int> GetId = new Dictionary<ItemObject, int>();
     public Dictionary<int, ItemObject> GetItem = new Dictionary<int, ItemObject>(); // use int as key to return ItemObject
 
     public void OnAfterDeserialize()
     {
-        GetId = new Dictionary<ItemObject, int>();
-        GetItem = new Dictionary<int, ItemObject>();
         for (int i = 0; i < Items.Length; i++)
         {
-            GetId.Add(Items[i], i);
+            Items[i].Id = i; // Item ID set during serialization
             GetItem.Add(i, Items[i]);
+        }
     }
-}
 
-public void OnBeforeSerialize()
-{
-
-}
+    public void OnBeforeSerialize()
+    {
+        GetItem = new Dictionary<int, ItemObject>();
+    }
 }
