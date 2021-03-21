@@ -15,6 +15,13 @@ public class InventoryObject : ScriptableObject
 
     public void AddItem(Item _item, int _amount)
     {
+        // Don't stack gear with buffs
+        if(_item.buffs.Length > 0)
+        {
+            Container.Items.Add(new InventorySlot(_item.Id, _item, _amount));
+            return;
+        }
+
         for (int i = 0; i < Container.Items.Count; i++)
         {
             if (Container.Items[i].item.Id == _item.Id)
@@ -78,20 +85,3 @@ public class InventorySlot
         amount += value;
     }
 }
-
-
-
-
-
-
-// Option A: 
-// string saveData = JsonUtility.ToJson(this, true);
-// BinaryFormatter bf = new BinaryFormatter();
-// FileStream file = File.Create(string.Concat(Application.persistentDataPath, savePath));
-// bf.Serialize(file, saveData);
-// file.Close();
-
-// BinaryFormatter bf = new BinaryFormatter();
-// FileStream file = File.Open(string.Concat(Application.persistentDataPath, savePath), FileMode.Open);
-// JsonUtility.FromJsonOverwrite(bf.Deserialize(file).ToString(), this);
-// file.Close();

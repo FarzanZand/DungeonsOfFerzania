@@ -15,14 +15,4 @@ MonoBehaviour:
   savePath: /inventory.Save
   database: {fileID: 11400000, guid: 37218ac5c9915794688b9a8a1bae9ccf, type: 2}
   Container:
-    Items:
-    - ID: 5
-      item:
-        Name: 
-        Id: 0
-      amount: 1
-    - ID: 0
-      item:
-        Name: 
-        Id: 0
-      amount: 1
+    Items: []

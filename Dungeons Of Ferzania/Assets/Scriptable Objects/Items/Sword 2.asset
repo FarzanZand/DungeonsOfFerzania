@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc904fed886588c41809592027e98011, type: 3}
   m_Name: Sword 2
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2619480918390814336, guid: f82eebc8fd46c284d934035095a25755, type: 3}
+  Id: 4
+  uiDisplay: {fileID: -7749266243441616874, guid: e49e58ac9e6e95d48b3d825fbf011a9d, type: 3}
   type: 1
   description: 'A sword for slashy slashy stab stab. '
-  atkBonus: 20
-  defenseBonus: 0
+  buffs:
+  - attribute: 0
+    value: 0
+    min: 12
+    max: 15

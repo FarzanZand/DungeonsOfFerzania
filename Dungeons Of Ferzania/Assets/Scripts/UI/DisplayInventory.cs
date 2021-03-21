@@ -56,8 +56,6 @@ public class DisplayInventory : MonoBehaviour
                 obj.GetComponent<RectTransform>().localPosition = GetPosition(i);
                 obj.GetComponentInChildren<TextMeshProUGUI>().text = slot.amount.ToString("n0");
                 itemsDisplayed.Add(slot, obj);
-                Debug.Log(slot.item);
-                Debug.Log(slot.ID);
             }
         }
     }
