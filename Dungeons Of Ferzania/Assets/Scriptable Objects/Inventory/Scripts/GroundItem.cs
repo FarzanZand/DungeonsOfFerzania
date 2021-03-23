@@ -17,5 +17,4 @@ public class GroundItem : MonoBehaviour, ISerializationCallbackReceiver
         EditorUtility.SetDirty(GetComponentInChildren<SpriteRenderer>());
 
     }
-
 }

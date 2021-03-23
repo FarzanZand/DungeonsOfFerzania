@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInventorySystem : MonoBehaviour
 {
 
+    public MouseItem mouseItem = new MouseItem();
     public InventoryObject inventory;
 
 
@@ -32,7 +33,7 @@ public class PlayerInventorySystem : MonoBehaviour
     }
 
     private void OnApplicationQuit() {
-    inventory.Container.Items.Clear(); 
+        inventory.Container.Items = new InventorySlot[28];
     }
 }
   
