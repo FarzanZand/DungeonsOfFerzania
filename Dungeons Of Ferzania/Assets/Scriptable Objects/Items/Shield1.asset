@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiDisplay: {fileID: -8017858232843932622, guid: e49e58ac9e6e95d48b3d825fbf011a9d, type: 3}
   stackable: 0
-  type: 0
+  type: 3
   description: 
   data:
     Name: 
-    Id: -1
+    Id: 5
     buffs:
     - attribute: 2
       value: 0

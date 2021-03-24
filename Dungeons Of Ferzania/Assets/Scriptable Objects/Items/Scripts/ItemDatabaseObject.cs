@@ -2,27 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// As soon as something changes on our Scriptable Objects that causes Unity to serialize that object,
-// We're going to go look through all items in our container, and repopulate the item slot, 
-// To make sure it is the same item which matches with the Item Id.
-
 [CreateAssetMenu(fileName = "New Item Database", menuName = "Inventory System/Items/Database")]
 public class ItemDatabaseObject : ScriptableObject, ISerializationCallbackReceiver
 {
-    public ItemObject[] Items; // Array of all items in the game
-    public Dictionary<int, ItemObject> GetItem = new Dictionary<int, ItemObject>(); // use int as key to return ItemObject
+    public ItemObject[] Items;
 
-    public void OnAfterDeserialize()
+    [ContextMenu("Update ID's")]
+    public void UpdateID()
     {
         for (int i = 0; i < Items.Length; i++)
         {
-            Items[i].data.Id = i;
-            GetItem.Add(i, Items[i]);
+            if (Items[i].data.Id != i)
+                Items[i].data.Id = i;
         }
+    }
+    public void OnAfterDeserialize()
+    {
+        UpdateID();
     }
 
     public void OnBeforeSerialize()
     {
-        GetItem = new Dictionary<int, ItemObject>();
     }
 }

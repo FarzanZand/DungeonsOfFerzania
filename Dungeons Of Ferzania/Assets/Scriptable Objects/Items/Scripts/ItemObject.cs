@@ -2,9 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// To create an item object, right click, create item, add it to the database and it will automatically get an ID. 
-// 
-
 public enum ItemType
 {
     Food,
@@ -23,12 +20,12 @@ public enum Attributes
     Stamina,
     Strength
 }
-
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory System/Items/item")]
 public class ItemObject : ScriptableObject
 {
+
     public Sprite uiDisplay;
-    public bool stackable; 
+    public bool stackable;
     public ItemType type;
     [TextArea(15, 20)]
     public string description;
@@ -39,6 +36,8 @@ public class ItemObject : ScriptableObject
         Item newItem = new Item(this);
         return newItem;
     }
+
+
 }
 
 [System.Serializable]
@@ -47,14 +46,11 @@ public class Item
     public string Name;
     public int Id = -1;
     public ItemBuff[] buffs;
-
     public Item()
     {
-        // For clearing purposes.
         Name = "";
         Id = -1;
     }
-
     public Item(ItemObject item)
     {
         Name = item.name;
@@ -67,7 +63,7 @@ public class Item
                 attribute = item.data.buffs[i].attribute
             };
         }
-}
+    }
 }
 
 [System.Serializable]
@@ -83,8 +79,6 @@ public class ItemBuff
         max = _max;
         GenerateValue();
     }
-
-
     public void GenerateValue()
     {
         value = UnityEngine.Random.Range(min, max);
