@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class GroundItem : MonoBehaviour, ISerializationCallbackReceiver
 {
-    public ItemObject item; 
+    public ItemObject item;
 
     public void OnAfterDeserialize()
     {
@@ -13,8 +13,9 @@ public class GroundItem : MonoBehaviour, ISerializationCallbackReceiver
 
     public void OnBeforeSerialize()
     {
-        GetComponentInChildren<SpriteRenderer>().sprite = item.uiDisplay;
-        EditorUtility.SetDirty(GetComponentInChildren<SpriteRenderer>());
-
+#if UNITY_EDITOR
+        // GetComponentInChildren<SpriteRenderer>().sprite = item.uiDisplay;
+        // EditorUtility.SetDirty(GetComponentInChildren<SpriteRenderer>());
+#endif
     }
 }
