@@ -9,7 +9,6 @@ public class PlayerInventorySystem : MonoBehaviour
     public InventoryObject inventory;
     public InventoryObject equipment;
 
-
     public void OnTriggerEnter2D(Collider2D other) {
         var item = other.GetComponent<GroundItem>();
         if(item)
@@ -23,6 +22,7 @@ public class PlayerInventorySystem : MonoBehaviour
     }
 
     private void Update() {
+
         if(Input.GetKeyDown(KeyCode.Space))
         {
             inventory.Save();
