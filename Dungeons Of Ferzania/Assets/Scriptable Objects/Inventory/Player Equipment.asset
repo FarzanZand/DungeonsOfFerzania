@@ -15,14 +15,14 @@ MonoBehaviour:
   savePath: 
   database: {fileID: 11400000, guid: 37218ac5c9915794688b9a8a1bae9ccf, type: 2}
   Container:
-    Items:
+    Slots:
     - AllowedItems: 05000000
       item:
         Name: 
         Id: -1
         buffs: []
       amount: 0
-    - AllowedItems: 0300000002000000
+    - AllowedItems: 0200000003000000
       item:
         Name: 
         Id: -1
